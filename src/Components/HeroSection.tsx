@@ -1,0 +1,117 @@
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import homepageImg from "../assets/homepage.png";
+
+function HeroSection() {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        mt: 10,
+        ml: 13,
+      }}
+    >
+      <Box sx={{ maxWidth: 500, ml: 10 }}>
+        <Typography
+          variant="h1"
+          gutterBottom
+          sx={{
+            fontWeight: "bold",
+            fontSize: "70px",
+            textAlign: "center",
+            lineHeight: 1.2,
+            color: "#000000",
+            fontFamily: "Inter, sans-serif",
+            marginRight: "20px",
+          }}
+        >
+          The super fast color palettes generator!
+        </Typography>
+        <Typography
+          variant="body1"
+          sx={{
+            mt: 2,
+            fontSize: "20px",
+            textAlign: "center",
+            lineHeight: 1.6,
+            fontWeight: 400,
+          }}
+        >
+          Create the perfect palette or get inspired by thousands of beautiful
+          color schemes.
+        </Typography>
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 500,
+            mt: 3,
+            mx: "auto",
+            textAlign: "center",
+            alignItems: "center",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "blue",
+              color: "white",
+              fontWeight: "bold",
+              padding: "12px 24px",
+              fontSize: "13px",
+              width: "250px",
+              borderRadius: "10px",
+            }}
+          >
+            Start the Generator!
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{
+              color: "black",
+              borderColor: "grey",
+              fontWeight: "bold",
+              padding: "12px 24px",
+              fontSize: "12px",
+              width: "250px",
+              borderRadius: "10px",
+            }}
+          >
+            Explore Trending Palettes
+          </Button>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          height: 500,
+          width: 800,
+          overflow: "hidden",
+          position: "relative",
+          border: "10px solid black",
+          borderRadius: "10px",
+        }}
+      >
+        <Box
+          sx={{
+            animation: "scrollImages 40s linear infinite",
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}
+        >
+          <img src={homepageImg} alt="scroll" style={{ width: "100%" }} />
+          <img src={homepageImg} alt="scroll" style={{ width: "100%" }} />
+          <img src={homepageImg} alt="scroll" style={{ width: "100%" }} />
+        </Box>
+      </Box>
+    </Box>
+  );
+}
+
+export default HeroSection;
