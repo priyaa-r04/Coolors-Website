@@ -2,8 +2,10 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import homepageImg from "../assets/homepage.png";
+import { useNavigate } from "react-router-dom";
 
 function HeroSection() {
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -57,19 +59,20 @@ function HeroSection() {
           }}
         >
           <Button
-            variant="contained"
-            sx={{
-              backgroundColor: "blue",
-              color: "white",
-              fontWeight: "bold",
-              padding: "12px 24px",
-              fontSize: "13px",
-              width: "250px",
-              borderRadius: "10px",
-            }}
-          >
-            Start the Generator!
-          </Button>
+      variant="contained"
+      onClick={() => navigate("/Colors")} 
+      sx={{
+        backgroundColor: "blue",
+        color: "white",
+        fontWeight: "bold",
+        padding: "12px 24px",
+        fontSize: "13px",
+        width: "250px",
+        borderRadius: "10px",
+      }}
+    >
+      Start the Generator!
+    </Button>
           <Button
             variant="outlined"
             sx={{
