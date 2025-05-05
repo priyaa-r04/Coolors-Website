@@ -7,21 +7,7 @@ import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import logo from "../assets/logo.png";
 
-
-
-// const supabaseUrl = `https://${project}.supabase.co", "${key}"`;
-// const supabaseAnonKey = key;
-
-// console.log(supabaseUrl)
-// console.log(supabaseAnonKey)
 function Header() {
-
-// const project = import.meta.env.VITE_SUPABASE_PROJECT_NAME
-// const key = import.meta.env.VITE_SUPABASE_API_KEY
-
-// console.log("project ", project)
-// console.log("key" ,key)
-
   
   return (
     <AppBar
@@ -50,7 +36,7 @@ function Header() {
               textDecoration: "none",
             }}
           >
-            <img src={logo} alt="Logo" style={{ height: 30 }} />
+            <img src={logo} alt="Logo" style={{ height: 20 , padding:'0px 10px'}} />
           </Box>
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <Link
