@@ -8,7 +8,7 @@ import {
   Button,
 } from "@mui/material";
 import {
-  MoreVert,
+  // MoreVert,
   CameraAlt,
   Undo,
   Redo,
@@ -43,11 +43,11 @@ const ColorToolbar = () => {
         </Typography>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <Tooltip title="More">
+          {/* <Tooltip title="More">
             <IconButton>
               <MoreVert />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip title="Create palette from photo">
             <IconButton>
               <CameraAlt />
