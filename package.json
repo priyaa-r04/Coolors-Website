@@ -17,6 +17,7 @@
     "@mui/material": "^7.0.2",
     "@supabase/supabase-js": "^2.49.4",
     "@tailwindcss/vite": "^4.1.4",
+    "color-namer": "^1.4.0",
     "firebase": "^11.6.1",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",

@@ -145,7 +145,7 @@ function Header() {
             p: 4,
             mx: "auto",
             my: "15%",
-            borderRadius: 2,
+            borderRadius: 3,
           }}
         >
           <Typography variant="h6" 
