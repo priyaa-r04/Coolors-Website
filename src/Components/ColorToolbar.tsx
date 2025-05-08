@@ -1,53 +1,21 @@
 import { useState } from "react";
-import {
-  Box,
-  Typography,
-  IconButton,
-  Tooltip,
-  Divider,
-  Button,
-} from "@mui/material";
-import {
-  // MoreVert,
-  CameraAlt,
-  Undo,
-  Redo,
-  GridOn,
-  CheckCircle,
-  Brightness4,
-  CloudDownload,
-  Menu as MenuIcon,
-  Favorite,
-  Visibility,
-} from "@mui/icons-material";
+import { Box, Typography, IconButton, Tooltip, Divider, Button } from "@mui/material";
+import { CameraAlt, Undo, Redo, GridOn, CheckCircle, Brightness4, CloudDownload, Menu as MenuIcon, Favorite, Visibility } from "@mui/icons-material";
+import { useDispatch } from 'react-redux';
+import { undo, redo } from '../redux/colorSlice';
 
 const ColorToolbar = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginTop: 2,
-          marginBottom:2
-        }}
-      >
-        <Typography variant="subtitle1" color="lightgrey"
-        sx={{
-            ml:2
-        }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 2, marginBottom: 2 }}>
+        <Typography variant="subtitle1" color="lightgrey" sx={{ ml: 2 }}>
           Press the spacebar to generate color palettes!
         </Typography>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          {/* <Tooltip title="More">
-            <IconButton>
-              <MoreVert />
-            </IconButton>
-          </Tooltip> */}
           <Tooltip title="Create palette from photo">
             <IconButton>
               <CameraAlt />
@@ -57,12 +25,12 @@ const ColorToolbar = () => {
           <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />
 
           <Tooltip title="Undo">
-            <IconButton>
+            <IconButton onClick={() => dispatch(undo())}>
               <Undo />
             </IconButton>
           </Tooltip>
           <Tooltip title="Redo">
-            <IconButton>
+            <IconButton onClick={() => dispatch(redo())}>
               <Redo />
             </IconButton>
           </Tooltip>
@@ -92,18 +60,7 @@ const ColorToolbar = () => {
           </Tooltip>
 
           {sidebarOpen && (
-            <Box
-              sx={{
-                position: "absolute",
-                right: 0,
-                top: 60,
-                width: 250,
-                backgroundColor: "#fff",
-                boxShadow: 3,
-                padding: 2,
-                zIndex: 10,
-              }}
-            >
+            <Box sx={{ position: "absolute", right: 0, top: 60, width: 250, backgroundColor: "#fff", boxShadow: 3, padding: 2, zIndex: 10 }}>
               <Typography gutterBottom>Brightness</Typography>
               <IconButton size="small" onClick={() => setSidebarOpen(false)}>
                 Close

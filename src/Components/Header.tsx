@@ -9,18 +9,33 @@ import logo from "../assets/logo.png";
 import { useState } from "react";
 import supabase from "../Supabase";
 import { Modal, Stack, Typography } from "@mui/material";
+import Popover from "@mui/material/Popover";
 
 function Header() {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const isPopoverOpen = Boolean(anchorEl);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
     setEmail("");
     setError(null);
   };
+
   const handleEmailLogin = async () => {
     setIsLoading(true);
     setError(null);
@@ -37,6 +52,7 @@ function Header() {
       }
     }
   };
+
   const handleOAuthLogin = async (provider: "google" | "apple") => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -82,16 +98,43 @@ function Header() {
               />
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Link
-                href="/tools"
-                sx={{
-                  color: "black",
-                  textDecoration: "none",
-                  fontFamily: "Inter, sans-serif",
-                }}
+              <Box
+                onMouseEnter={handlePopoverOpen}
+                onMouseLeave={handlePopoverClose}
               >
-                Tools
-              </Link>
+                <Link
+                  href="#"
+                  sx={{
+                    color: "black",
+                    textDecoration: "none",
+                    fontFamily: "Inter, sans-serif",
+                    position: "relative",
+                  }}
+                >
+                  Tools
+                </Link>
+
+                <Popover
+                  open={isPopoverOpen}
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                  disableRestoreFocus
+                  PaperProps={{
+                    sx: { p: 2 },
+                  }}
+                >
+                  <Typography>Tool 1</Typography>
+                  <Typography>Tool 2</Typography>
+                </Popover>
+              </Box>
+
               <Link
                 href="/Gopro"
                 sx={{
@@ -137,7 +180,11 @@ function Header() {
         </Container>
       </AppBar>
 
-      <Modal open={open} onClose={handleClose}>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        closeAfterTransition
+      >
         <Box
           sx={{
             backgroundColor: "#fff",
@@ -148,16 +195,19 @@ function Header() {
             borderRadius: 3,
           }}
         >
-          <Typography variant="h6" 
-          >Hello!</Typography>
-          <Typography sx={{ mb: 3,  color: 'grey'}}>
+          <Typography variant="h6">Hello!</Typography>
+          <Typography sx={{ mb: 3, color: "grey" }}>
             Use your email or another service to continue with Coolors
           </Typography>
           <Stack spacing={2}>
             <Button
               onClick={() => handleOAuthLogin("google")}
               variant="contained"
-              sx={{ backgroundColor: "#f5f5f5", color: "#000", textTransform: "none" }}
+              sx={{
+                backgroundColor: "#f5f5f5",
+                color: "#000",
+                textTransform: "none",
+              }}
             >
               Continue with Google
             </Button>
@@ -196,3 +246,6 @@ function Header() {
 }
 
 export default Header;
+
+
+

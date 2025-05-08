@@ -1,9 +1,18 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { Typography, Paper, Box, CircularProgress } from "@mui/material";
+import {
+  Typography,
+  Paper,
+  Box,
+  CircularProgress,
+  Button,
+} from "@mui/material";
 import Header from "./Header";
-import ColorToolbar from "./ColorToolbar";
+import { useDispatch, useSelector } from "react-redux";
+import { setColors, removeColor, undo, redo } from "../redux/colorSlice";
 import CloseIcon from "@mui/icons-material/Close";
+import ColorToolbar from "./ColorToolbar";
+import { RootState } from "../redux/store";
 
 interface Color {
   name: string;
@@ -26,9 +35,12 @@ function blendColors(hex1: string, hex2: string): string {
 }
 
 const Colors = () => {
-  const [colors, setColors] = useState<Color[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const dispatch = useDispatch();
+  const { colors, historyIndex, history } = useSelector(
+    (state: RootState) => state.colors
+  );
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     insertColors();
@@ -36,6 +48,7 @@ const Colors = () => {
   }, []);
 
   const fetchColors = async () => {
+    setLoading(true);
     try {
       const { data, error } = await supabase
         .from("colors")
@@ -48,12 +61,12 @@ const Colors = () => {
         uniqueColorsMap.set(color.hex_code, color);
       });
       const uniqueColors = Array.from(uniqueColorsMap.values());
-
       const shuffled = uniqueColors.sort(() => 0.5 - Math.random());
-      setColors(shuffled.slice(0, 5));
-      setLoading(false);
+
+      dispatch(setColors(shuffled.slice(0, 5)));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Error fetching colors");
+    } finally {
       setLoading(false);
     }
   };
@@ -115,9 +128,23 @@ const Colors = () => {
     }
   };
 
-  if (loading) return <CircularProgress />;
-  if (error) return <Typography color="error">Error: {error}</Typography>;
+  const handleRemoveColor = (index: number) => {
+    dispatch(removeColor(index)); // Use dispatch with removeColor action
+  };
 
+  const handleUndo = () => {
+    dispatch(undo());
+  };
+
+  const handleRedo = () => {
+    dispatch(redo());
+  };
+
+  // if (!colors.length) return <CircularProgress />;
+
+  if (loading) return <CircularProgress />;
+  if (error) return <Typography color="error">{error}</Typography>;
+  if (!colors.length) return <Typography>No colors available.</Typography>;
   return (
     <>
       <Header />
@@ -133,7 +160,7 @@ const Colors = () => {
           position: "relative",
         }}
       >
-        {colors.map((color, idx) => (
+        {colors.map((color: Color, idx: number) => (
           <Box
             key={`color-${idx}`}
             sx={{
@@ -164,11 +191,7 @@ const Colors = () => {
             >
               <CloseIcon
                 className="removeIcon"
-                onClick={() =>
-                  setColors((prevColors) =>
-                    prevColors.filter((_, i) => i !== idx)
-                  )
-                }
+                onClick={() => handleRemoveColor(idx)}
                 sx={{
                   position: "absolute",
                   top: "40%",
@@ -239,11 +262,9 @@ const Colors = () => {
                       name: "Blend",
                       hex_code: blendedHex,
                     };
-                    setColors((prev) => {
-                      const updated = [...prev];
-                      updated.splice(idx + 1, 0, newColor);
-                      return updated;
-                    });
+                    const newColors = [...colors];
+                    newColors.splice(idx + 1, 0, newColor);
+                    dispatch(setColors(newColors));
                   }}
                 >
                   <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
@@ -254,6 +275,23 @@ const Colors = () => {
             )}
           </Box>
         ))}
+      </Box>
+      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
+        <Button
+          variant="contained"
+          onClick={handleUndo}
+          disabled={historyIndex <= 0}
+        >
+          Undo
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleRedo}
+          disabled={historyIndex >= history.length - 1}
+          sx={{ marginLeft: 2 }}
+        >
+          Redo
+        </Button>
       </Box>
     </>
   );
