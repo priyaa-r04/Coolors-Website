@@ -5,11 +5,10 @@ import {
   Paper,
   Box,
   CircularProgress,
-  Button,
 } from "@mui/material";
 import Header from "./Header";
 import { useDispatch, useSelector } from "react-redux";
-import { setColors, removeColor, undo, redo } from "../redux/colorSlice";
+import { setColors, removeColor, initColors} from "../redux/colorSlice";
 import CloseIcon from "@mui/icons-material/Close";
 import ColorToolbar from "./ColorToolbar";
 import { RootState } from "../redux/store";
@@ -36,115 +35,104 @@ function blendColors(hex1: string, hex2: string): string {
 
 const Colors = () => {
   const dispatch = useDispatch();
-  const { colors, historyIndex, history } = useSelector(
-    (state: RootState) => state.colors
-  );
+  const colors = useSelector((state: RootState) => state.colors.colors);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    const fetchColors = async () => {
+      setLoading(true);
+      try {
+        const { data, error } = await supabase
+          .from("colors")
+          .select("name, hex_code");
+  
+        if (error) throw error;
+  
+        const uniqueColorsMap = new Map();
+        (data as Color[]).forEach((color) => {
+          uniqueColorsMap.set(color.hex_code, color);
+        });
+        const uniqueColors = Array.from(uniqueColorsMap.values());
+        const shuffled = uniqueColors.sort(() => 0.5 - Math.random());
+  
+        dispatch(initColors(shuffled.slice(0, 5)));
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error fetching colors");
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    const insertColors = async () => {
+      try {
+        await supabase.from("colors").insert([
+          { name: "Light Pink", hex_code: "#FFB6C1" },
+          { name: "Pale Turquoise", hex_code: "#AFEEEE" },
+          { name: "Lavender", hex_code: "#E6E6FA" },
+          { name: "Light Yellow", hex_code: "#FFFFE0" },
+          { name: "Light Green", hex_code: "#90EE90" },
+          { name: "Light Coral", hex_code: "#F08080" },
+          { name: "Peach Puff", hex_code: "#FFDAB9" },
+          { name: "Light Sky Blue", hex_code: "#87CEFA" },
+          { name: "Misty Rose", hex_code: "#FFE4E1" },
+          { name: "Alice Blue", hex_code: "#F0F8FF" },
+          { name: "Light Goldenrod Yellow", hex_code: "#FAFAD2" },
+          { name: "Light Blue", hex_code: "#ADD8E6" },
+          { name: "Honeydew", hex_code: "#F0FFF0" },
+          { name: "Light Salmon", hex_code: "#FFA07A" },
+          { name: "Linen", hex_code: "#FAF0E6" },
+          { name: "Antique White", hex_code: "#FAEBD7" },
+          { name: "Pale Green", hex_code: "#98FB98" },
+          { name: "Light Steel Blue", hex_code: "#B0C4DE" },
+          { name: "Lavender Blush", hex_code: "#FFF0F5" },
+          { name: "Light Cyan", hex_code: "#E0FFFF" },
+          { name: "Sky Blue", hex_code: "#87CEEB" },
+          { name: "Blanched Almond", hex_code: "#FFEBCD" },
+          { name: "Medium Purple", hex_code: "#9370DB" },
+          { name: "Slate Blue", hex_code: "#6A5ACD" },
+          { name: "Peach", hex_code: "#FFDAB9" },
+          { name: "Thistle", hex_code: "#D8BFD8" },
+          { name: "Mint Cream", hex_code: "#F5FFFA" },
+          { name: "Sea Green", hex_code: "#2E8B57" },
+          { name: "Lavender Rose", hex_code: "#FBAED2" },
+          { name: "Medium Aquamarine", hex_code: "#66CDAA" },
+          { name: "Wheat", hex_code: "#F5DEB3" },
+          { name: "Plum", hex_code: "#DDA0DD" },
+          { name: "Rosy Brown", hex_code: "#BC8F8F" },
+          { name: "Powder Blue", hex_code: "#B0E0E6" },
+          { name: "Cornsilk", hex_code: "#FFF8DC" },
+          { name: "Papaya Whip", hex_code: "#FFEFD5" },
+          { name: "Burly Wood", hex_code: "#DEB887" },
+          { name: "Old Lace", hex_code: "#FDF5E6" },
+          { name: "Khaki", hex_code: "#F0E68C" },
+          { name: "Beige", hex_code: "#F5F5DC" },
+          { name: "Lemon Chiffon", hex_code: "#FFFACD" },
+          { name: "Aquamarine", hex_code: "#7FFFD4" },
+          { name: "Pale Violet Red", hex_code: "#DB7093" },
+          { name: "Orchid", hex_code: "#DA70D6" },
+          { name: "Light Sea Green", hex_code: "#20B2AA" },
+          { name: "Navajo White", hex_code: "#FFDEAD" },
+          { name: "Ivory", hex_code: "#FFFFF0" },
+          { name: "Ghost White", hex_code: "#F8F8FF" },
+        ]);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Error inserting colors");
+      }
+    };
+  
     insertColors();
     fetchColors();
-  }, []);
+  }, [dispatch]); 
+  
 
-  const fetchColors = async () => {
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from("colors")
-        .select("name, hex_code");
-
-      if (error) throw error;
-
-      const uniqueColorsMap = new Map();
-      (data as Color[]).forEach((color) => {
-        uniqueColorsMap.set(color.hex_code, color);
-      });
-      const uniqueColors = Array.from(uniqueColorsMap.values());
-      const shuffled = uniqueColors.sort(() => 0.5 - Math.random());
-
-      dispatch(setColors(shuffled.slice(0, 5)));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error fetching colors");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const insertColors = async () => {
-    try {
-      await supabase.from("colors").insert([
-        { name: "Light Pink", hex_code: "#FFB6C1" },
-        { name: "Pale Turquoise", hex_code: "#AFEEEE" },
-        { name: "Lavender", hex_code: "#E6E6FA" },
-        { name: "Light Yellow", hex_code: "#FFFFE0" },
-        { name: "Light Green", hex_code: "#90EE90" },
-        { name: "Light Coral", hex_code: "#F08080" },
-        { name: "Peach Puff", hex_code: "#FFDAB9" },
-        { name: "Light Sky Blue", hex_code: "#87CEFA" },
-        { name: "Misty Rose", hex_code: "#FFE4E1" },
-        { name: "Alice Blue", hex_code: "#F0F8FF" },
-        { name: "Light Goldenrod Yellow", hex_code: "#FAFAD2" },
-        { name: "Light Blue", hex_code: "#ADD8E6" },
-        { name: "Honeydew", hex_code: "#F0FFF0" },
-        { name: "Light Salmon", hex_code: "#FFA07A" },
-        { name: "Linen", hex_code: "#FAF0E6" },
-        { name: "Antique White", hex_code: "#FAEBD7" },
-        { name: "Pale Green", hex_code: "#98FB98" },
-        { name: "Light Steel Blue", hex_code: "#B0C4DE" },
-        { name: "Lavender Blush", hex_code: "#FFF0F5" },
-        { name: "Light Cyan", hex_code: "#E0FFFF" },
-        { name: "Sky Blue", hex_code: "#87CEEB" },
-        { name: "Blanched Almond", hex_code: "#FFEBCD" },
-        { name: "Medium Purple", hex_code: "#9370DB" },
-        { name: "Slate Blue", hex_code: "#6A5ACD" },
-        { name: "Peach", hex_code: "#FFDAB9" },
-        { name: "Thistle", hex_code: "#D8BFD8" },
-        { name: "Mint Cream", hex_code: "#F5FFFA" },
-        { name: "Sea Green", hex_code: "#2E8B57" },
-        { name: "Lavender Rose", hex_code: "#FBAED2" },
-        { name: "Medium Aquamarine", hex_code: "#66CDAA" },
-        { name: "Wheat", hex_code: "#F5DEB3" },
-        { name: "Plum", hex_code: "#DDA0DD" },
-        { name: "Rosy Brown", hex_code: "#BC8F8F" },
-        { name: "Powder Blue", hex_code: "#B0E0E6" },
-        { name: "Cornsilk", hex_code: "#FFF8DC" },
-        { name: "Papaya Whip", hex_code: "#FFEFD5" },
-        { name: "Burly Wood", hex_code: "#DEB887" },
-        { name: "Old Lace", hex_code: "#FDF5E6" },
-        { name: "Khaki", hex_code: "#F0E68C" },
-        { name: "Beige", hex_code: "#F5F5DC" },
-        { name: "Lemon Chiffon", hex_code: "#FFFACD" },
-        { name: "Aquamarine", hex_code: "#7FFFD4" },
-        { name: "Pale Violet Red", hex_code: "#DB7093" },
-        { name: "Orchid", hex_code: "#DA70D6" },
-        { name: "Light Sea Green", hex_code: "#20B2AA" },
-        { name: "Navajo White", hex_code: "#FFDEAD" },
-        { name: "Ivory", hex_code: "#FFFFF0" },
-        { name: "Ghost White", hex_code: "#F8F8FF" },
-      ]);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Error inserting colors");
-    }
-  };
 
   const handleRemoveColor = (index: number) => {
-    dispatch(removeColor(index)); // Use dispatch with removeColor action
+    dispatch(removeColor(index)); 
   };
-
-  const handleUndo = () => {
-    dispatch(undo());
-  };
-
-  const handleRedo = () => {
-    dispatch(redo());
-  };
-
-  // if (!colors.length) return <CircularProgress />;
 
   if (loading) return <CircularProgress />;
   if (error) return <Typography color="error">{error}</Typography>;
-  if (!colors.length) return <Typography>No colors available.</Typography>;
   return (
     <>
       <Header />
@@ -160,7 +148,20 @@ const Colors = () => {
           position: "relative",
         }}
       >
-        {colors.map((color: Color, idx: number) => (
+         {colors.length === 0 ? (
+          <Box
+            sx={{
+              flex: 1,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Typography variant="h4">No colors available.</Typography>
+          </Box>
+        ) : (
+        colors.map((color: Color, idx: number) => (
           <Box
             key={`color-${idx}`}
             sx={{
@@ -273,25 +274,9 @@ const Colors = () => {
                 </Box>
               </Box>
             )}
-          </Box>
-        ))}
-      </Box>
-      <Box sx={{ display: "flex", justifyContent: "center", marginTop: 2 }}>
-        <Button
-          variant="contained"
-          onClick={handleUndo}
-          disabled={historyIndex <= 0}
-        >
-          Undo
-        </Button>
-        <Button
-          variant="contained"
-          onClick={handleRedo}
-          disabled={historyIndex >= history.length - 1}
-          sx={{ marginLeft: 2 }}
-        >
-          Redo
-        </Button>
+         </Box>
+        ))
+      )}
       </Box>
     </>
   );
