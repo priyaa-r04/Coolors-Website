@@ -8,6 +8,8 @@ import {
   Button,
   Modal,
   styled,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import {
   CameraAlt,
@@ -26,6 +28,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { undo, redo } from "../redux/colorSlice";
 import { RootState } from "../redux/store";
 import AuthModal from "../Components/AuthModal";
+import Tab from "@mui/material/Tab";
+import { TabContext, TabList } from "@mui/lab";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -140,6 +144,23 @@ const ColorToolbar = () => {
   const [selectedTab, setSelectedTab] = useState<"upload" | "url">("upload");
   const [imageURL, setImageURL] = useState("");
 
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const generatePaletteUrl = () => {
+    return `http://localhost:5173/Colors`;
+  };
+
+  const handleExportClick = () => {
+    const paletteUrl = generatePaletteUrl();
+    
+    navigator.clipboard.writeText(paletteUrl).then(() => {
+      setSnackbarOpen(true);
+    }).catch(err => {
+      console.error("Failed to copy text: ", err);
+    });
+  };
+
+
   return (
     <>
       <Box
@@ -228,9 +249,23 @@ const ColorToolbar = () => {
           >
             View
           </Button>
-          <Button startIcon={<CloudDownload />} variant="text">
-            Export
-          </Button>
+          <Button
+        startIcon={<CloudDownload />}
+        variant="text"
+        onClick={handleExportClick}
+      >
+        Export
+      </Button>
+
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackbarOpen(false)}
+      >
+        <Alert severity="success" onClose={() => setSnackbarOpen(false)}>
+          URL copied to clipboard!
+        </Alert>
+      </Snackbar>
           <Button
             startIcon={<Favorite />}
             variant="text"
@@ -320,8 +355,8 @@ const ColorToolbar = () => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width:400,
-            height:300,
+            width: 400,
+            height: 300,
             bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
@@ -333,20 +368,19 @@ const ColorToolbar = () => {
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <Button
-                variant={selectedTab === "upload" ? "contained" : "outlined"}
-                onClick={() => setSelectedTab("upload")}
-              >
-                Upload
-              </Button>
-              <Button
-                variant={selectedTab === "url" ? "contained" : "outlined"}
-                onClick={() => setSelectedTab("url")}
-              >
-                URL
-              </Button>
-            </Box>
+            <TabContext value={selectedTab}>
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <TabList
+                  onChange={(e: React.SyntheticEvent, newValue: string) =>
+                    setSelectedTab(newValue as "upload" | "url")
+                  }
+                  aria-label="image source tabs"
+                >
+                  <Tab label="Upload" value="upload" />
+                  <Tab label="URL" value="url" />
+                </TabList>
+              </Box>
+            </TabContext>
 
             {selectedTab === "upload" ? (
               <InputFileUpload />
