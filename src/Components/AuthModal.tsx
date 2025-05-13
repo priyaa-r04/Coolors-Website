@@ -12,35 +12,15 @@ import {
   Apple as AppleIcon,
   Close as CloseIcon,
 } from "@mui/icons-material";
-import { useState } from "react";
 import supabase from "../Supabase";
 
 interface AuthModalProps {
   open: boolean;
   onClose: () => void;
+  openSignupModal: () => void;
 }
 
-const AuthModal = ({ open, onClose }: AuthModalProps) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleEmailLogin = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: "demo@example.com",
-      });
-      if (error) throw error;
-      alert("Check your email for the login link!");
-      onClose();
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Unexpected error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+const AuthModal = ({ open, onClose, openSignupModal }: AuthModalProps) => {
   const handleOAuthLogin = async (provider: "google" | "apple") => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
@@ -83,6 +63,7 @@ const AuthModal = ({ open, onClose }: AuthModalProps) => {
         <Typography sx={{ mb: 3, color: "grey", textAlign: "center" }}>
           Use your email or another service to continue with Coolors
         </Typography>
+
         <Stack spacing={2}>
           <Button
             onClick={() => handleOAuthLogin("google")}
@@ -95,11 +76,11 @@ const AuthModal = ({ open, onClose }: AuthModalProps) => {
               justifyContent: "flex-start",
               alignItems: "center",
               width: "100%",
-              height: "45px"
+              height: "45px",
             }}
           >
             <GoogleIcon sx={{ mr: 1 }} />
-            <Typography sx={{ textAlign: "center", flexGrow: 1 ,marginLeft:"9"}}>
+            <Typography sx={{ textAlign: "center", flexGrow: 1, marginLeft: "9" }}>
               Continue with Google
             </Typography>
           </Button>
@@ -115,30 +96,29 @@ const AuthModal = ({ open, onClose }: AuthModalProps) => {
               justifyContent: "flex-start",
               alignItems: "center",
               width: "100%",
-               height: "45px"
+              height: "45px",
             }}
           >
             <AppleIcon sx={{ mr: 1 }} />
-            <Typography sx={{ textAlign: "center", flexGrow: 1 ,marginLeft:"9"}}>
+            <Typography sx={{ textAlign: "center", flexGrow: 1, marginLeft: "9" }}>
               Continue with Apple
             </Typography>
           </Button>
-          {error && <Typography color="error">{error}</Typography>}
 
           <Button
-            onClick={handleEmailLogin}
+            onClick={openSignupModal}
             variant="contained"
             sx={{
               backgroundColor: "blue",
               color: "white",
               borderRadius: "7px",
-               height: "45px"
+              height: "45px",
             }}
-            disabled={isLoading}
           >
-            {isLoading ? "Sending..." : "Continue with Email"}
+            Continue with Email
           </Button>
         </Stack>
+
         <Typography variant="body2" sx={{ mt: 3 }}>
           By continuing, you agree to our{" "}
           <Link href="/terms" target="_blank" rel="noopener noreferrer">

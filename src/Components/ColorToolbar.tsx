@@ -25,11 +25,12 @@ import {
   CloudUpload,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { undo, redo } from "../redux/colorSlice";
 import { RootState } from "../redux/store";
 import AuthModal from "../Components/AuthModal";
 import Tab from "@mui/material/Tab";
 import { TabContext, TabList } from "@mui/lab";
+import SignupModal from "./SignupModal";
+import { undo, redo, selectCanUndo, selectCanRedo } from "../redux/colorSlice";
 
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
@@ -146,20 +147,27 @@ const ColorToolbar = () => {
 
   const [snackbarOpen, setSnackbarOpen] = useState(false);
 
+  const [signupModalOpen, setSignupModalOpen] = useState(false);
+
+  const canUndo = useSelector(selectCanUndo);
+  const canRedo = useSelector(selectCanRedo);
+
   const generatePaletteUrl = () => {
     return `http://localhost:5173/Colors`;
   };
 
   const handleExportClick = () => {
     const paletteUrl = generatePaletteUrl();
-    
-    navigator.clipboard.writeText(paletteUrl).then(() => {
-      setSnackbarOpen(true);
-    }).catch(err => {
-      console.error("Failed to copy text: ", err);
-    });
-  };
 
+    navigator.clipboard
+      .writeText(paletteUrl)
+      .then(() => {
+        setSnackbarOpen(true);
+      })
+      .catch((err) => {
+        console.error("Failed to copy text: ", err);
+      });
+  };
 
   return (
     <>
@@ -179,7 +187,17 @@ const ColorToolbar = () => {
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <Tooltip title="Create palette from photo">
             <IconButton onClick={() => setImageModalOpen(true)}>
-              <CameraAlt />
+              <CameraAlt
+                sx={{
+                  color: "#36454F",
+                  backgroundColor: "transparent",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                    color: "#000",
+                  },
+                }}
+              />
             </IconButton>
           </Tooltip>
 
@@ -187,12 +205,32 @@ const ColorToolbar = () => {
 
           <Tooltip title="Undo">
             <IconButton onClick={() => dispatch(undo())}>
-              <Undo />
+              <Undo
+                sx={{
+                  color: canUndo ? "#36454F" : "lightgrey",
+                  backgroundColor: "transparent",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: canUndo ? "#f0f0f0" : "transparent",
+                    color: canUndo ? "#000" : "lightgrey",
+                  },
+                }}
+              />
             </IconButton>
           </Tooltip>
           <Tooltip title="Redo">
             <IconButton onClick={() => dispatch(redo())}>
-              <Redo />
+              <Redo
+                sx={{
+                  color: canRedo ? "#36454F" : "lightgrey",
+                  backgroundColor: "transparent",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: canRedo ? "#f0f0f0" : "transparent",
+                    color: canRedo ? "#000" : "lightgrey",
+                  },
+                }}
+              />
             </IconButton>
           </Tooltip>
 
@@ -200,7 +238,17 @@ const ColorToolbar = () => {
 
           <Tooltip title="View palette variations">
             <IconButton>
-              <GridOn />
+              <GridOn
+                sx={{
+                  color: "#36454F",
+                  backgroundColor: "transparent",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                    color: "#000",
+                  },
+                }}
+              />
             </IconButton>
           </Tooltip>
 
@@ -208,7 +256,17 @@ const ColorToolbar = () => {
 
           <Tooltip title="Check palette contrast">
             <IconButton>
-              <CheckCircle />
+              <CheckCircle
+                sx={{
+                  color: "#36454F",
+                  backgroundColor: "transparent",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                    color: "#000",
+                  },
+                }}
+              />
             </IconButton>
           </Tooltip>
 
@@ -216,7 +274,17 @@ const ColorToolbar = () => {
 
           <Tooltip title="Adjust Brightness">
             <IconButton onClick={() => setSidebarOpen(true)}>
-              <Brightness4 />
+              <Brightness4
+                sx={{
+                  color: "#36454F",
+                  backgroundColor: "transparent",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                    color: "#000",
+                  },
+                }}
+              />
             </IconButton>
           </Tooltip>
 
@@ -246,30 +314,57 @@ const ColorToolbar = () => {
             startIcon={<Visibility />}
             variant="text"
             onClick={() => setModalOpen(true)}
+            sx={{
+              color: "#36454F",
+              backgroundColor: "transparent",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "#f0f0f0",
+                color: "#000",
+              },
+            }}
           >
             View
           </Button>
           <Button
-        startIcon={<CloudDownload />}
-        variant="text"
-        onClick={handleExportClick}
-      >
-        Export
-      </Button>
+            startIcon={<CloudDownload />}
+            variant="text"
+            onClick={handleExportClick}
+            sx={{
+              color: "#36454F",
+              backgroundColor: "transparent",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "#f0f0f0",
+                color: "#000",
+              },
+            }}
+          >
+            Export
+          </Button>
 
-      <Snackbar
-        open={snackbarOpen}
-        autoHideDuration={2000}
-        onClose={() => setSnackbarOpen(false)}
-      >
-        <Alert severity="success" onClose={() => setSnackbarOpen(false)}>
-          URL copied to clipboard!
-        </Alert>
-      </Snackbar>
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={2000}
+            onClose={() => setSnackbarOpen(false)}
+          >
+            <Alert severity="success" onClose={() => setSnackbarOpen(false)}>
+              URL copied to clipboard!
+            </Alert>
+          </Snackbar>
           <Button
             startIcon={<Favorite />}
             variant="text"
             onClick={() => setAuthModalOpen(true)}
+            sx={{
+              color: "Black",
+              backgroundColor: "transparent",
+              textTransform: "none",
+              "&:hover": {
+                backgroundColor: "#f0f0f0",
+                color: "#000",
+              },
+            }}
           >
             Save
           </Button>
@@ -277,11 +372,24 @@ const ColorToolbar = () => {
           <AuthModal
             open={authModalOpen}
             onClose={() => setAuthModalOpen(false)}
+            openSignupModal={() => {
+              setAuthModalOpen(false);
+              setSignupModalOpen(true);
+            }}
           />
-
           <Tooltip title="Open Sidebar">
             <IconButton>
-              <MenuIcon />
+              <MenuIcon
+                sx={{
+                  color: "#36454F",
+                  backgroundColor: "transparent",
+                  textTransform: "none",
+                  "&:hover": {
+                    backgroundColor: "#f0f0f0",
+                    color: "#000",
+                  },
+                }}
+              />
             </IconButton>
           </Tooltip>
         </Box>
@@ -371,7 +479,7 @@ const ColorToolbar = () => {
             <TabContext value={selectedTab}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <TabList
-                  onChange={(e: React.SyntheticEvent, newValue: string) =>
+                  onChange={(_, newValue: string) =>
                     setSelectedTab(newValue as "upload" | "url")
                   }
                   aria-label="image source tabs"
@@ -415,6 +523,15 @@ const ColorToolbar = () => {
           </Box>
         </Box>
       </Modal>
+
+      <SignupModal
+        open={signupModalOpen}
+        onClose={() => setSignupModalOpen(false)}
+        onSwitchToSignIn={() => {
+          setSignupModalOpen(false);
+          setAuthModalOpen(true);
+        }}
+      />
     </>
   );
 };

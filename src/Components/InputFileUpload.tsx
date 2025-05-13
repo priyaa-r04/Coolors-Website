@@ -3,15 +3,14 @@ import { Button } from '@mui/material';
 import { CloudUpload } from '@mui/icons-material';
 
 interface InputFileUploadProps {
-  onUpload: (file: File) => void;  // Callback to handle the file upload
+  onUpload: (file: File) => void;  
 }
 
 const InputFileUpload: React.FC<InputFileUploadProps> = ({ onUpload }) => {
-  // Handle file selection and pass the file to parent component
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      onUpload(file); // Pass the selected file to parent
+      onUpload(file); 
     }
   };
 
@@ -27,7 +26,7 @@ const InputFileUpload: React.FC<InputFileUploadProps> = ({ onUpload }) => {
         type="file"
         accept="image/*"
         onChange={handleFileChange}
-        style={{ display: 'none' }}  // Hide the default file input element
+        style={{ display: 'none' }}  
       />
     </Button>
   );

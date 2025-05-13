@@ -1,26 +1,20 @@
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-import {
-  Typography,
-  Paper,
-  Box,
-  CircularProgress,
-} from "@mui/material";
+import supabase from "../Supabase";
+import { Typography, Paper, Box, CircularProgress } from "@mui/material";
 import Header from "./Header";
 import { useDispatch, useSelector } from "react-redux";
-import { setColors, removeColor, initColors} from "../redux/colorSlice";
+import { setColors, removeColor, initColors } from "../redux/colorSlice";
 import CloseIcon from "@mui/icons-material/Close";
 import ColorToolbar from "./ColorToolbar";
 import { RootState } from "../redux/store";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 
 interface Color {
   name: string;
   hex_code: string;
 }
-
-const projectURL = import.meta.env.VITE_SUPABASE_PROJECT_URL;
-const key = import.meta.env.VITE_SUPABASE_API_KEY;
-const supabase = createClient(projectURL, key);
 
 function blendColors(hex1: string, hex2: string): string {
   const c1 = parseInt(hex1.slice(1), 16);
@@ -46,16 +40,16 @@ const Colors = () => {
         const { data, error } = await supabase
           .from("colors")
           .select("name, hex_code");
-  
+
         if (error) throw error;
-  
+
         const uniqueColorsMap = new Map();
         (data as Color[]).forEach((color) => {
           uniqueColorsMap.set(color.hex_code, color);
         });
         const uniqueColors = Array.from(uniqueColorsMap.values());
         const shuffled = uniqueColors.sort(() => 0.5 - Math.random());
-  
+
         dispatch(initColors(shuffled.slice(0, 5)));
       } catch (err) {
         setError(err instanceof Error ? err.message : "Error fetching colors");
@@ -63,7 +57,7 @@ const Colors = () => {
         setLoading(false);
       }
     };
-  
+
     const insertColors = async () => {
       try {
         await supabase.from("colors").insert([
@@ -120,35 +114,36 @@ const Colors = () => {
         setError(err instanceof Error ? err.message : "Error inserting colors");
       }
     };
-  
+
     insertColors();
     fetchColors();
-  }, [dispatch]); 
-  
-
+  }, [dispatch]);
 
   const handleRemoveColor = (index: number) => {
-    dispatch(removeColor(index)); 
+    dispatch(removeColor(index));
   };
 
   if (loading) return <CircularProgress />;
   if (error) return <Typography color="error">{error}</Typography>;
+
   return (
     <>
       <Header />
       <ColorToolbar />
       <Box
         sx={{
-          height: "100vh",
+          height: "86vh",
           width: "100%",
           display: "flex",
           flexDirection: "row",
           boxSizing: "border-box",
-          overflow: "hidden",
+          overflow: "visible",
           position: "relative",
+          margin: 0, 
+    padding: 0,
         }}
       >
-         {colors.length === 0 ? (
+        {colors.length === 0 ? (
           <Box
             sx={{
               flex: 1,
@@ -161,125 +156,159 @@ const Colors = () => {
             <Typography variant="h4">No colors available.</Typography>
           </Box>
         ) : (
-        colors.map((color: Color, idx: number) => (
-          <Box
-            key={`color-${idx}`}
-            sx={{
-              position: "relative",
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-            }}
-          >
+          colors.map((color: Color, idx: number) => (
             <Box
-              component={Paper}
+              key={`color-${idx}`}
               sx={{
-                backgroundColor: color.hex_code,
+                position: "relative",
                 flex: 1,
                 display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
                 flexDirection: "column",
-                position: "relative",
-                borderRadius: 0,
-                overflow: "hidden",
                 height: "100%",
-                "&:hover .removeIcon": {
-                  opacity: 1,
-                  transform: "translateY(0)",
-                },
+                overflow: "visible",
               }}
             >
-              <CloseIcon
-                className="removeIcon"
-                onClick={() => handleRemoveColor(idx)}
-                sx={{
-                  position: "absolute",
-                  top: "40%",
-                  transform: "translateY(-100%)",
-                  cursor: "pointer",
-                  color: "black",
-                  fontSize: "20px",
-                  opacity: 0,
-                  transition: "all 0.3s ease-in-out",
-                  zIndex: 2,
-                }}
-              />
-              <Typography
-                variant="h6"
-                sx={{ color: "black", fontWeight: "bold", fontSize: "25px" }}
-              >
-                {color.hex_code.replace("#", "")}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{ color: "black", fontSize: "14px" }}
-              >
-                {color.name}
-              </Typography>
-            </Box>
-
-            {idx < colors.length - 1 && colors.length < 15 && (
               <Box
+                component={Paper}
                 sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: "-4px",
-                  width: "8px",
+                  backgroundColor: color.hex_code,
+                  flex: 1,
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                  borderRadius: 0,
+                  overflow: "hidden",
                   height: "100%",
-                  zIndex: 10,
-                  "&:hover .plusIcon": {
+                  marginTop: 0,
+                  "&:hover .iconGroup": {
                     opacity: 1,
-                    transform: "translate(-50%, -50%) scale(1)",
                   },
                 }}
               >
                 <Box
-                  className="plusIcon"
+                  className="iconGroup"
                   sx={{
                     position: "absolute",
                     top: "50%",
                     left: "50%",
-                    transform: "translate(-50%, -50%) scale(0)",
-                    transition: "all 0.3s ease",
-                    opacity: 0,
-                    zIndex: 11,
-                    backgroundColor: "#fff",
-                    borderRadius: "50%",
-                    width: "40px",
-                    height: "40px",
+                    transform: "translateX(-50%)",
                     display: "flex",
+                    flexDirection: "column",
                     alignItems: "center",
-                    justifyContent: "center",
-                    boxShadow: "0 0 6px rgba(0,0,0,0.25)",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => {
-                    const blendedHex = blendColors(
-                      color.hex_code,
-                      colors[idx + 1].hex_code
-                    );
-                    const newColor: Color = {
-                      name: "Blend",
-                      hex_code: blendedHex,
-                    };
-                    const newColors = [...colors];
-                    newColors.splice(idx + 1, 0, newColor);
-                    dispatch(setColors(newColors));
+                    gap: "20px",
+                    opacity: 0,
+                    transition: "all 0.3s ease-in-out",
+                    zIndex: 2,
                   }}
                 >
-                  <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
-                    +
+                  <CloseIcon
+                    onClick={() => handleRemoveColor(idx)}
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontSize: "20px",
+                    }}
+                  />
+                  <FavoriteBorderIcon
+                    sx={{ cursor: "pointer", color: "black", fontSize: "20px" }}
+                  />
+                  <DragIndicatorIcon
+                    sx={{ cursor: "grab", color: "black", fontSize: "20px" }}
+                  />
+                  <ContentCopyIcon
+                    sx={{ cursor: "pointer", color: "black", fontSize: "20px" }}
+                    onClick={() =>
+                      navigator.clipboard.writeText(color.hex_code)
+                    }
+                  />
+                </Box>
+
+                <Box sx={{ padding: 1, textAlign: "center", marginTop: "auto" , marginBottom: "40%"}}>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: "black",
+                      fontWeight: "bold",
+                      fontSize: "25px",
+                    }}
+                  >
+                    {color.hex_code.replace("#", "")}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{ color: "black", fontSize: "14px" }}
+                  >
+                    {color.name}
                   </Typography>
                 </Box>
               </Box>
-            )}
-         </Box>
-        ))
-      )}
+
+              {idx < colors.length - 1 && colors.length < 15 && (
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    width: "16px",
+                    height: "100%",
+                    overflow: "visible",
+                    zIndex: 10,
+                    "&:hover .plusIcon": {
+                      opacity: 1,
+                      transform: "translate(-50%, -50%) scale(1)",
+                    },
+                  }}
+                >
+                  <Box
+                    className="plusIcon"
+                    sx={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%) scale(0)",
+                      transition: "all 0.3s ease",
+                      opacity: 0,
+                      zIndex: 11,
+                      backgroundColor: "#fff",
+                      borderRadius: "50%",
+                      width: "40px",
+                      height: "40px",
+                      display: "flex",
+                      marginLeft: "10px",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      boxShadow: "0 0 6px rgba(0,0,0,0.25)",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      const blendedHex = blendColors(
+                        color.hex_code,
+                        colors[idx + 1].hex_code
+                      );
+                      const newColor: Color = {
+                        name: "Blend",
+                        hex_code: blendedHex,
+                      };
+                      const newColors = [...colors];
+                      newColors.splice(idx + 1, 0, newColor);
+                      dispatch(setColors(newColors));
+                    }}
+                  >
+                    <Typography sx={{ fontSize: "24px", fontWeight: "bold" }}>
+                      +
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+            </Box>
+          ))
+        )}
       </Box>
     </>
   );
 };
 
 export default Colors;
+

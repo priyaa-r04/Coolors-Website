@@ -83,6 +83,10 @@ const colorsSlice = createSlice({
   },
 });
 
+export const selectCanUndo = (state: { colors: ColorsState }) => state.colors.historyIndex > 0;
+export const selectCanRedo = (state: { colors: ColorsState }) => state.colors.historyIndex < state.colors.history.length - 1;
+
+
 export const {
   initColors,
   setColors,
