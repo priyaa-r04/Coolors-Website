@@ -6,7 +6,13 @@ import {
   Link,
   Button,
   Divider,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import logo from "../assets/logo.png";
 import { useState } from "react";
 import AuthModal from "../Components/AuthModal";
@@ -14,14 +20,13 @@ import SignupModal from "../Components/SignupModal";
 import SignInModal from "./SignInModal";
 
 function Header() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-
-  const handleOpen = () => setAuthModalOpen(true);
-  const handleClose = () => setAuthModalOpen(false);
-
   const [signupModalOpen, setSignupModalOpen] = useState(false);
   const [signinModalOpen, setSigninModalOpen] = useState(false);
 
+  const handleOpen = () => setAuthModalOpen(true);
+  const handleClose = () => setAuthModalOpen(false);
   const handleOpenSignupModal = () => setSignupModalOpen(true);
   const handleCloseSignInModal = () => setSigninModalOpen(false);
 
@@ -35,6 +40,10 @@ function Header() {
     setSignupModalOpen(true);
   };
 
+  const toggleDrawer = (open: boolean) => () => {
+    setDrawerOpen(open);
+  };
+
   return (
     <>
       <AppBar
@@ -45,14 +54,16 @@ function Header() {
           borderBottom: "1px solid #ccc",
         }}
       >
-        <Container maxWidth={false} disableGutters sx={{ minHeight: 5 }}>
-          <Toolbar disableGutters>
+        <Container maxWidth={false} disableGutters>
+          <Toolbar
+            disableGutters
+            sx={{ justifyContent: "space-between", px: 2 }}
+          >
             <Box
               component="a"
               href="/"
               sx={{
-                display: { xs: "none", md: "flex" },
-                flexGrow: 1,
+                display: "flex",
                 alignItems: "center",
                 textDecoration: "none",
               }}
@@ -60,32 +71,34 @@ function Header() {
               <img
                 src={logo}
                 alt="Logo"
-                style={{ height: 20, padding: "0px 10px" }}
+                style={{ height: 24, padding: "0 10px" }}
               />
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box>
-                <Link
-                  href="#"
-                  sx={{
-                    color: "black",
-                    textDecoration: "none",
-                    fontFamily: "Inter, sans-serif",
-                    position: "relative",
-                  }}
-                >
-                  Tools
-                </Link>
-              </Box>
 
+            <Box
+              sx={{
+                display: { xs: "none", md: "flex" },
+                alignItems: "center",
+              }}
+            >
               <Link
                 href="#"
                 sx={{
                   color: "black",
                   textDecoration: "none",
-                  ml: 2,
-                  fontWeight: 50,
                   fontFamily: "Inter, sans-serif",
+                  mx: 1,
+                }}
+              >
+                Tools
+              </Link>
+              <Link
+                href="#"
+                sx={{
+                  color: "black",
+                  textDecoration: "none",
+                  fontFamily: "Inter, sans-serif",
+                  mx: 1,
                 }}
               >
                 Go Pro
@@ -94,11 +107,11 @@ function Header() {
               <Link
                 onClick={handleOpen}
                 sx={{
-                  ml: 2,
-                  textDecoration: "none",
                   color: "black",
-                  fontFamily: "Inter, sans-serif",
                   cursor: "pointer",
+                  textDecoration: "none",
+                  fontFamily: "Inter, sans-serif",
+                  mx: 1,
                 }}
               >
                 Sign In
@@ -107,21 +120,44 @@ function Header() {
                 onClick={handleOpen}
                 variant="contained"
                 sx={{
-                  ml: 2,
                   backgroundColor: "blue",
                   borderRadius: "10px",
                   color: "white",
-                  textDecoration: "none",
                   fontFamily: "Inter, sans-serif",
-                  cursor: "pointer",
+                  ml: 2,
+                  fontSize: "16px",
+                  padding: "6px 12px",
                 }}
               >
                 Sign Up
               </Button>
             </Box>
+
+            <Box sx={{ display: { xs: "flex", md: "none" } }}>
+              <IconButton edge="end" onClick={toggleDrawer(true)}>
+                <MenuIcon />
+              </IconButton>
+            </Box>
           </Toolbar>
         </Container>
       </AppBar>
+
+      <Drawer anchor="right" open={drawerOpen} onClose={toggleDrawer(false)}>
+        <List sx={{ width: 250 }}>
+          <ListItem component="button" onClick={toggleDrawer(false)}>
+            <ListItemText primary="Tools" />
+          </ListItem>
+          <ListItem component="button" onClick={toggleDrawer(false)}>
+            <ListItemText primary="Go Pro" />
+          </ListItem>
+          <ListItem component="button" onClick={handleOpen}>
+            <ListItemText primary="Sign In" />
+          </ListItem>
+          <ListItem component="button" onClick={handleOpen}>
+            <ListItemText primary="Sign Up" />
+          </ListItem>
+        </List>
+      </Drawer>
 
       <AuthModal
         open={authModalOpen}

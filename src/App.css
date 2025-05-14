@@ -2,3 +2,13 @@
     margin: 0;
     padding: 0;
 }
+
+@keyframes scrollImages {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-100%);
+    }
+  }
+  

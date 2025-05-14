@@ -135,12 +135,12 @@ const Colors = () => {
           height: "86vh",
           width: "100%",
           display: "flex",
-          flexDirection: "row",
+          flexDirection: { xs: "column", md: "row" },
           boxSizing: "border-box",
           overflow: "visible",
           position: "relative",
-          margin: 0, 
-    padding: 0,
+          margin: 0,
+          padding: 0,
         }}
       >
         {colors.length === 0 ? (
@@ -180,7 +180,7 @@ const Colors = () => {
                   position: "relative",
                   borderRadius: 0,
                   overflow: "hidden",
-                  height: "100%",
+                  height: { xs: "200px", md: "100%" },
                   marginTop: 0,
                   "&:hover .iconGroup": {
                     opacity: 1,
@@ -225,7 +225,14 @@ const Colors = () => {
                   />
                 </Box>
 
-                <Box sx={{ padding: 1, textAlign: "center", marginTop: "auto" , marginBottom: "40%"}}>
+                <Box
+                  sx={{
+                    padding: 1,
+                    textAlign: "center",
+                    marginTop: "auto",
+                    marginBottom: "40%",
+                  }}
+                >
                   <Typography
                     variant="h6"
                     sx={{
@@ -311,4 +318,3 @@ const Colors = () => {
 };
 
 export default Colors;
-

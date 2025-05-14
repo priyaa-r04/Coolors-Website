@@ -178,6 +178,16 @@ const ColorToolbar = () => {
           alignItems: "center",
           mt: 2,
           mb: 2,
+          px: 2,
+          flexWrap: "wrap",
+          flexDirection: { xs: "column", sm: "row" },
+          position: { xs: "fixed", sm: "static" },
+          bottom: { xs: 0, sm: "auto" },
+          width: { xs: "100%", sm: "auto" },
+          backgroundColor: { xs: "white", sm: "transparent" },
+          zIndex: 999,
+          boxShadow: { xs: "0 -2px 10px rgba(0,0,0,0.1)", sm: "none" },
+          py: { xs: 1, sm: 0 },
         }}
       >
         <Typography variant="subtitle1" color="lightgrey" sx={{ ml: 2 }}>

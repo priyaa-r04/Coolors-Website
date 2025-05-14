@@ -6,23 +6,29 @@ import InstagramIcon from "@mui/icons-material/Instagram";
 function Footer() {
   return (
     <Box
-      sx={{ bgcolor: "#f7f7f8", p: 6, minHeight: "500px" }}
+      sx={{ bgcolor: "#f7f7f8", p: { xs: 3, md: 6 }, minHeight: "500px" }}
       component="footer"
     >
       <Box
         sx={{
           maxWidth: "1200px",
           mx: "auto",
-           px: 2,
+          px: 2,
           display: "flex",
           flexWrap: "wrap",
           gap: 8,
+          justifyContent: { xs: "center", md: "flex-start" },
+          textAlign: { xs: "center", md: "left" },
         }}
       >
         <Box sx={{ flex: "1 1 250px", minWidth: "200px" }}>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 900, fontSize: "22px", mb: 3 }}
+            sx={{
+              fontWeight: 900,
+              fontSize: { xs: "18px", md: "22px" },
+              mb: 3,
+            }}
           >
             Tools
           </Typography>
@@ -45,7 +51,7 @@ function Footer() {
                     color: "black",
                     textDecoration: "none",
                     fontFamily: "Inter, sans-serif",
-                    fontSize: "1.1em",
+                    fontSize: { xs: "1em", md: "1.1em" },
                     mb: 2,
                     "&:hover": {
                       color: "#0073e6",
@@ -62,7 +68,11 @@ function Footer() {
         <Box sx={{ flex: "1 1 250px", minWidth: "200px" }}>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 700, fontSize: "22px", mb: 3 }}
+            sx={{
+              fontWeight: 700,
+              fontSize: { xs: "18px", md: "22px" },
+              mb: 3,
+            }}
           >
             More
           </Typography>
@@ -84,7 +94,7 @@ function Footer() {
                     color: "black",
                     textDecoration: "none",
                     fontFamily: "Inter, sans-serif",
-                    fontSize: "1.1em",
+                    fontSize: { xs: "1em", md: "1.1em" },
                     mb: 2,
                     "&:hover": {
                       color: "#0073e6",
@@ -101,7 +111,11 @@ function Footer() {
         <Box sx={{ flex: "1 1 250px", minWidth: "200px" }}>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 700, fontSize: "22px", mb: 3 }}
+            sx={{
+              fontWeight: 700,
+              fontSize: { xs: "18px", md: "22px" },
+              mb: 3,
+            }}
           >
             Jobs
           </Typography>
@@ -115,7 +129,7 @@ function Footer() {
                     color: "black",
                     textDecoration: "none",
                     fontFamily: "Inter, sans-serif",
-                    fontSize: "1.1em",
+                    fontSize: { xs: "1em", md: "1.1em" },
                     mb: 2,
                     "&:hover": {
                       color: "#0073e6",
@@ -130,7 +144,12 @@ function Footer() {
 
           <Typography
             variant="h6"
-            sx={{ fontWeight: 900, fontSize: "22px", mt: 4, mb: 3 }}
+            sx={{
+              fontWeight: 900,
+              fontSize: { xs: "18px", md: "22px" },
+              mt: 4,
+              mb: 3,
+            }}
           >
             Apps
           </Typography>
@@ -145,7 +164,7 @@ function Footer() {
                       color: "black",
                       textDecoration: "none",
                       fontFamily: "Inter, sans-serif",
-                      fontSize: "1.1em",
+                      fontSize: { xs: "1em", md: "1.1em" },
                       mb: 2,
                       "&:hover": {
                         color: "#0073e6",
@@ -160,10 +179,14 @@ function Footer() {
           </ul>
         </Box>
 
-        <Box sx={{ flex: "1 1 250px", minWidth: "200px" , mr: 0}}>
+        <Box sx={{ flex: "1 1 250px", minWidth: "200px" }}>
           <Typography
             variant="h6"
-            sx={{ fontWeight: 700, fontSize: "22px", mb: 3 }}
+            sx={{
+              fontWeight: 700,
+              fontSize: { xs: "18px", md: "22px" },
+              mb: 3,
+            }}
           >
             Company
           </Typography>
@@ -188,7 +211,7 @@ function Footer() {
                     color: "black",
                     textDecoration: "none",
                     fontFamily: "Inter, sans-serif",
-                    fontSize: "1.1em",
+                    fontSize: { xs: "1em", md: "1.1em" },
                     mb: 2,
                     "&:hover": {
                       color: "#0073e6",
@@ -206,26 +229,28 @@ function Footer() {
       <Box sx={{ maxWidth: "1200px", mx: "auto" }}>
         <Divider sx={{ my: 4, borderColor: "#ccc" }} />
       </Box>
+
       <Box
         sx={{
           maxWidth: "1200px",
           mx: "auto",
           display: "flex",
-          justifyContent: "space-between",
+          justifyContent: { xs: "center", md: "space-between" },
           alignItems: "center",
-          flexWrap: "wrap",
+          flexDirection: { xs: "column", md: "row" },
           gap: 2,
+          textAlign: { xs: "center", md: "left" },
         }}
       >
         <Typography
           sx={{
-            fontSize: "14px",
+            fontSize: { xs: "12px", md: "14px" },
             color: "#333",
             fontFamily: "Inter, sans-serif",
           }}
         >
-          © {new Date().getFullYear()} Coolors by <strong>Priya Reddy</strong>. From a creative
-          to all the others.
+          © {new Date().getFullYear()} Coolors by <strong>Priya Reddy</strong>.
+          From a creative to all the others.
         </Typography>
 
         <Box>
