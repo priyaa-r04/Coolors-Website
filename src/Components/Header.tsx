@@ -27,8 +27,12 @@ function Header() {
 
   const handleOpen = () => setAuthModalOpen(true);
   const handleClose = () => setAuthModalOpen(false);
+
   const handleOpenSignupModal = () => setSignupModalOpen(true);
-  const handleCloseSignInModal = () => setSigninModalOpen(false);
+  const handleCloseSignupModal = () => setSignupModalOpen(false);
+  
+  const handleCloseSignInModal = () => setSigninModalOpen(false); 
+
 
   const handleSwitchToSignIn = () => {
     setSignupModalOpen(false);
@@ -166,7 +170,7 @@ function Header() {
       />
       <SignupModal
         open={signupModalOpen}
-        onClose={handleCloseSignInModal}
+        onClose={handleCloseSignupModal}
         onSwitchToSignIn={handleSwitchToSignIn}
       />
       <SignInModal

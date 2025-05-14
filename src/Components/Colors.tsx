@@ -174,33 +174,69 @@ const Colors = () => {
                   backgroundColor: color.hex_code,
                   flex: 1,
                   display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
+                  flexDirection: {
+                    xs: "row",
+                    md: "column",
+                  },
+                  justifyContent: {
+                    xs: "space-between",
+                    md: "center",
+                  },
                   alignItems: "center",
                   position: "relative",
                   borderRadius: 0,
                   overflow: "hidden",
-                  height: { xs: "200px", md: "100%" },
+                  height: { xs: "120px", md: "100%" },
                   marginTop: 0,
+                  px: { xs: 2, md: 0 },
+                  py: { xs: 2, md: 0 },
                   "&:hover .iconGroup": {
                     opacity: 1,
                   },
                 }}
               >
                 <Box
-                  className="iconGroup"
                   sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translateX(-50%)",
                     display: "flex",
                     flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: {
+                      xs: "flex-start",
+                      md: "center",
+                    },
+                    gap: 0.5,
+                  }}
+                >
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      color: "black",
+                      fontWeight: "bold",
+                      fontSize: { xs: "18px", md: "25px" },
+                    }}
+                  >
+                    {color.hex_code.replace("#", "")}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: "black",
+                      fontSize: { xs: "12px", md: "14px" },
+                    }}
+                  >
+                    {color.name}
+                  </Typography>
+                </Box>
+
+                <Box
+                  className="iconGroup"
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "row", md: "column" },
                     alignItems: "center",
-                    gap: "20px",
-                    opacity: 0,
+                    gap: 1,
+                    opacity: { xs: 1, md: 0 },
                     transition: "all 0.3s ease-in-out",
-                    zIndex: 2,
                   }}
                 >
                   <CloseIcon
@@ -218,38 +254,17 @@ const Colors = () => {
                     sx={{ cursor: "grab", color: "black", fontSize: "20px" }}
                   />
                   <ContentCopyIcon
-                    sx={{ cursor: "pointer", color: "black", fontSize: "20px" }}
+                    sx={{
+                      cursor: "pointer",
+                      color: "black",
+                      fontSize: "20px",
+                    }}
                     onClick={() =>
                       navigator.clipboard.writeText(color.hex_code)
                     }
                   />
                 </Box>
-
-                <Box
-                  sx={{
-                    padding: 1,
-                    textAlign: "center",
-                    marginTop: "auto",
-                    marginBottom: "40%",
-                  }}
-                >
-                  <Typography
-                    variant="h6"
-                    sx={{
-                      color: "black",
-                      fontWeight: "bold",
-                      fontSize: "25px",
-                    }}
-                  >
-                    {color.hex_code.replace("#", "")}
-                  </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{ color: "black", fontSize: "14px" }}
-                  >
-                    {color.name}
-                  </Typography>
-                </Box>
+                
               </Box>
 
               {idx < colors.length - 1 && colors.length < 15 && (

@@ -34,12 +34,29 @@ const AuthModal = ({ open, onClose, openSignupModal }: AuthModalProps) => {
       <Box
         sx={{
           backgroundColor: "#fff",
-          width: 350,
-          p: 4,
+          width: {
+            xs: "80%", 
+            sm: 350,    
+          },
+          height: {
+            xs: "auto", 
+            sm: "auto", 
+          },
+          maxWidth: "100%", 
+          p: {
+            xs: 2, 
+            sm: 3, 
+          },
           mx: "auto",
-          my: "15%",
+          my: {
+            xs: "8%",  
+            sm: "15%", 
+          },
           borderRadius: 3,
           position: "relative",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <IconButton
@@ -56,7 +73,7 @@ const AuthModal = ({ open, onClose, openSignupModal }: AuthModalProps) => {
 
         <Typography
           variant="h6"
-          sx={{ fontWeight: "bold", textAlign: "center", fontSize: "30px" }}
+          sx={{ fontWeight: "bold", textAlign: "center", fontSize: "26px" }} 
         >
           Hello!
         </Typography>
@@ -64,7 +81,7 @@ const AuthModal = ({ open, onClose, openSignupModal }: AuthModalProps) => {
           Use your email or another service to continue with Coolors
         </Typography>
 
-        <Stack spacing={2}>
+        <Stack spacing={2} sx={{ width: "100%" }}>
           <Button
             onClick={() => handleOAuthLogin("google")}
             variant="contained"
@@ -76,7 +93,7 @@ const AuthModal = ({ open, onClose, openSignupModal }: AuthModalProps) => {
               justifyContent: "flex-start",
               alignItems: "center",
               width: "100%",
-              height: "45px",
+              height: "40px",  
             }}
           >
             <GoogleIcon sx={{ mr: 1 }} />
@@ -96,7 +113,7 @@ const AuthModal = ({ open, onClose, openSignupModal }: AuthModalProps) => {
               justifyContent: "flex-start",
               alignItems: "center",
               width: "100%",
-              height: "45px",
+              height: "40px",  
             }}
           >
             <AppleIcon sx={{ mr: 1 }} />
@@ -112,14 +129,14 @@ const AuthModal = ({ open, onClose, openSignupModal }: AuthModalProps) => {
               backgroundColor: "blue",
               color: "white",
               borderRadius: "7px",
-              height: "45px",
+              height: "40px",  
             }}
           >
             Continue with Email
           </Button>
         </Stack>
 
-        <Typography variant="body2" sx={{ mt: 3 }}>
+        <Typography variant="body2" sx={{ mt: 3, textAlign: "center" }}>
           By continuing, you agree to our{" "}
           <Link href="/terms" target="_blank" rel="noopener noreferrer">
             Terms of Service

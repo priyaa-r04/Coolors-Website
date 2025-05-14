@@ -82,7 +82,7 @@ function HeroSection() {
               borderColor: "grey",
               fontWeight: "bold",
               padding: "12px 24px",
-              fontSize: { xs: "12px", md: "13px" },
+              fontSize: { xs: "12px", md: "12px" },
               width: "250px",
               borderRadius: "10px",
             }}
@@ -101,6 +101,7 @@ function HeroSection() {
           border: "10px solid black",
           borderRadius: "10px",
           marginTop: { xs: 3, md: 0 },
+          marginLeft: {xs:"-9px"}, 
           mx: { md: 2 },
         }}
       >

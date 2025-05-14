@@ -81,7 +81,7 @@ function CardsSection() {
               "&:hover": {
                 backgroundColor: card.hoverColor,
               },
-              height: { xs: 180, sm: 200, md: 240 },
+              height: { xs: 180, sm: 200, md: 270 },
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
