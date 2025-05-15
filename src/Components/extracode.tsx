@@ -129,10 +129,12 @@ const Colors = () => {
   return (
     <>
       <Header />
-      <ColorToolbar />
+      <Box sx={{ display: { xs: "none", sm: "block" } }}>
+    <ColorToolbar />
+  </Box>
       <Box
         sx={{
-          height: { xs: "80vh", md: "86vh" },
+          height: "86vh",
           width: "100%",
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
@@ -150,7 +152,7 @@ const Colors = () => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              // height: "50px",
+              height: "100%",
             }}
           >
             <Typography variant="h4">No colors available.</Typography>
@@ -192,7 +194,6 @@ const Colors = () => {
                   py: { xs: 2, md: 0 },
                   "&:hover .iconGroup": {
                     opacity: 1,
-                    pointerEvents: "auto", 
                   },
                 }}
               >
@@ -230,26 +231,16 @@ const Colors = () => {
                 </Box>
 
                 <Box
-  className="iconGroup"
-  sx={{
-    display: "flex",
-    flexDirection: { xs: "row", md: "column" },
-    alignItems: "center",
-    gap: 1,
-
-    // Default state
-    opacity: {
-      xs: 0.2, // Low opacity on mobile
-      md: 0,   // Hidden on desktop
-    },
-    pointerEvents: {
-      xs: "none", // Not clickable on mobile by default
-      md: "none", // Not clickable on desktop by default
-    },
-    transition: "all 0.3s ease-in-out",
-  }}
->
-
+                  className="iconGroup"
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "row", md: "column" },
+                    alignItems: "center",
+                    gap: 1,
+                    opacity: { xs: 1, md: 0 },
+                    transition: "all 0.3s ease-in-out",
+                  }}
+                >
                   <CloseIcon
                     onClick={() => handleRemoveColor(idx)}
                     sx={{
@@ -339,6 +330,11 @@ const Colors = () => {
           ))
         )}
       </Box>
+
+      <Box sx={{ display: { xs: "block", sm: "none" }, mt: 2 }}>
+    <ColorToolbar />
+  </Box>
+
     </>
   );
 };

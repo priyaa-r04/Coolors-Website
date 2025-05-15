@@ -186,11 +186,11 @@ const ColorToolbar = () => {
           width: { xs: "100%", sm: "auto" },
           backgroundColor: { xs: "white", sm: "transparent" },
           zIndex: 999,
-          boxShadow: { xs: "0 -2px 10px rgba(0,0,0,0.1)", sm: "none" },
-          py: { xs: 1, sm: 0 },
+          py: { xs: 0, sm: 0 },
         }}
       >
-        <Typography variant="subtitle1" color="lightgrey" sx={{ ml: 2 }}>
+        <Typography variant="subtitle1" color="lightgrey" 
+        sx={{ ml: 2 , display: { xs: "none", sm: "block" },}}>
           Press the spacebar to generate color palettes!
         </Typography>
 
