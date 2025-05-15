@@ -32,6 +32,7 @@ const Colors = () => {
   const colors = useSelector((state: RootState) => state.colors.colors);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchColors = async () => {
@@ -148,12 +149,83 @@ const Colors = () => {
             sx={{
               flex: 1,
               display: "flex",
+              flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              // height: "50px",
+              gap: 2,
             }}
           >
             <Typography variant="h4">No colors available.</Typography>
+            <button
+              style={{
+                padding: "10px 20px",
+                fontSize: "16px",
+                backgroundColor: "#1976d2",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                const predefinedColors: Color[] = [
+                  { name: "Light Pink", hex_code: "#FFB6C1" },
+                  { name: "Pale Turquoise", hex_code: "#AFEEEE" },
+                  { name: "Lavender", hex_code: "#E6E6FA" },
+                  { name: "Light Yellow", hex_code: "#FFFFE0" },
+                  { name: "Light Green", hex_code: "#90EE90" },
+                  { name: "Light Coral", hex_code: "#F08080" },
+                  { name: "Peach Puff", hex_code: "#FFDAB9" },
+                  { name: "Light Sky Blue", hex_code: "#87CEFA" },
+                  { name: "Misty Rose", hex_code: "#FFE4E1" },
+                  { name: "Alice Blue", hex_code: "#F0F8FF" },
+                  { name: "Light Goldenrod Yellow", hex_code: "#FAFAD2" },
+                  { name: "Light Blue", hex_code: "#ADD8E6" },
+                  { name: "Honeydew", hex_code: "#F0FFF0" },
+                  { name: "Light Salmon", hex_code: "#FFA07A" },
+                  { name: "Linen", hex_code: "#FAF0E6" },
+                  { name: "Antique White", hex_code: "#FAEBD7" },
+                  { name: "Pale Green", hex_code: "#98FB98" },
+                  { name: "Light Steel Blue", hex_code: "#B0C4DE" },
+                  { name: "Lavender Blush", hex_code: "#FFF0F5" },
+                  { name: "Light Cyan", hex_code: "#E0FFFF" },
+                  { name: "Sky Blue", hex_code: "#87CEEB" },
+                  { name: "Blanched Almond", hex_code: "#FFEBCD" },
+                  { name: "Medium Purple", hex_code: "#9370DB" },
+                  { name: "Slate Blue", hex_code: "#6A5ACD" },
+                  { name: "Peach", hex_code: "#FFDAB9" },
+                  { name: "Thistle", hex_code: "#D8BFD8" },
+                  { name: "Mint Cream", hex_code: "#F5FFFA" },
+                  { name: "Sea Green", hex_code: "#2E8B57" },
+                  { name: "Lavender Rose", hex_code: "#FBAED2" },
+                  { name: "Medium Aquamarine", hex_code: "#66CDAA" },
+                  { name: "Wheat", hex_code: "#F5DEB3" },
+                  { name: "Plum", hex_code: "#DDA0DD" },
+                  { name: "Rosy Brown", hex_code: "#BC8F8F" },
+                  { name: "Powder Blue", hex_code: "#B0E0E6" },
+                  { name: "Cornsilk", hex_code: "#FFF8DC" },
+                  { name: "Papaya Whip", hex_code: "#FFEFD5" },
+                  { name: "Burly Wood", hex_code: "#DEB887" },
+                  { name: "Old Lace", hex_code: "#FDF5E6" },
+                  { name: "Khaki", hex_code: "#F0E68C" },
+                  { name: "Beige", hex_code: "#F5F5DC" },
+                  { name: "Lemon Chiffon", hex_code: "#FFFACD" },
+                  { name: "Aquamarine", hex_code: "#7FFFD4" },
+                  { name: "Pale Violet Red", hex_code: "#DB7093" },
+                  { name: "Orchid", hex_code: "#DA70D6" },
+                  { name: "Light Sea Green", hex_code: "#20B2AA" },
+                  { name: "Navajo White", hex_code: "#FFDEAD" },
+                  { name: "Ivory", hex_code: "#FFFFF0" },
+                  { name: "Ghost White", hex_code: "#F8F8FF" },
+                ];
+                const randomColor =
+                  predefinedColors[
+                    Math.floor(Math.random() * predefinedColors.length)
+                  ];
+                dispatch(setColors([randomColor]));
+              }}
+            >
+              Add Color
+            </button>
           </Box>
         ) : (
           colors.map((color: Color, idx: number) => (
@@ -192,7 +264,7 @@ const Colors = () => {
                   py: { xs: 2, md: 0 },
                   "&:hover .iconGroup": {
                     opacity: 1,
-                    pointerEvents: "auto", 
+                    pointerEvents: "auto",
                   },
                 }}
               >
@@ -230,26 +302,18 @@ const Colors = () => {
                 </Box>
 
                 <Box
-  className="iconGroup"
-  sx={{
-    display: "flex",
-    flexDirection: { xs: "row", md: "column" },
-    alignItems: "center",
-    gap: 1,
-
-    // Default state
-    opacity: {
-      xs: 0.2, // Low opacity on mobile
-      md: 0,   // Hidden on desktop
-    },
-    pointerEvents: {
-      xs: "none", // Not clickable on mobile by default
-      md: "none", // Not clickable on desktop by default
-    },
-    transition: "all 0.3s ease-in-out",
-  }}
->
-
+                  className="iconGroup"
+                  sx={{
+                    display: "flex",
+                    flexDirection: { xs: "row", md: "column" },
+                    alignItems: "center",
+                    gap: 1,
+                    opacity: 0,
+                    transition: "all 0.3s ease-in-out",
+                    pointerEvents: "none",
+                    position: "relative",
+                  }}
+                >
                   <CloseIcon
                     onClick={() => handleRemoveColor(idx)}
                     sx={{
@@ -265,17 +329,30 @@ const Colors = () => {
                     sx={{ cursor: "grab", color: "black", fontSize: "20px" }}
                   />
                   <ContentCopyIcon
-                    sx={{
-                      cursor: "pointer",
-                      color: "black",
-                      fontSize: "20px",
+                    sx={{ cursor: "pointer", color: "black", fontSize: "20px" }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(color.hex_code);
+                      setCopiedIndex(idx);
+                      setTimeout(() => setCopiedIndex(null), 1500);
                     }}
-                    onClick={() =>
-                      navigator.clipboard.writeText(color.hex_code)
-                    }
                   />
+                  {copiedIndex === idx && (
+                    <Typography
+                      sx={{
+                        fontSize: "10px",
+                        color: "black",
+                        backgroundColor: "white",
+                        borderRadius: "4px",
+                        px: 0.5,
+                        py: 0.2,
+                        boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                        mt: 0.5,
+                      }}
+                    >
+                      Copied!
+                    </Typography>
+                  )}
                 </Box>
-                
               </Box>
 
               {idx < colors.length - 1 && colors.length < 15 && (
